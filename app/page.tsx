@@ -298,24 +298,24 @@ export default function Home() {
                     ))}
                   </tr>
                   <tr className="bg-white">
-                    <td className="border border-gray-400 px-3 py-2 font-medium text-gray-700 text-sm">Anteriorites</td>
-                    {tableData[2].map((value, i) => (
-                      <td key={i} className="border border-gray-400 p-1">
-                        {showSuccessors && successorPhase === 0 && currentTaskName ? (
-                      value.split(",").map((v) => v.trim()).map((part, idx) => (
-                        <span key={idx} className="font-medium text-gray-900">
-                          {idx > 0 && ", "}
-                          <span className={part === currentTaskName ? "text-red-500 font-bold" : ""}>{part}</span>
-                        </span>
-                      ))
-                    ) : (
-                      <input type="text" value={value} onChange={(e) => handleChange(2, i, e.target.value)}
-                        placeholder="- ou A, B"
-                        className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-gray-900 font-medium" />
-                    )}
-                      </td>
-                    ))}
-                  </tr>
+  <td className="border border-gray-400 px-3 py-2 font-medium text-gray-700 text-sm">Anteriorites</td>
+  {tableData[2].map((value, i) => (
+    <td key={i} className="border border-gray-400 px-2 py-2 text-center text-sm font-medium text-gray-900">
+      {showSuccessors && successorPhase === 0 && currentTaskName ? (
+        value.split(",").map((v) => v.trim()).map((part, idx) => (
+          <span key={idx}>
+            {idx > 0 && ", "}
+            <span className={part === currentTaskName ? "text-red-500 font-bold" : ""}>{part}</span>
+          </span>
+        ))
+      ) : (
+        <input type="text" value={value} onChange={(e) => handleChange(2, i, e.target.value)}
+          placeholder="- ou A, B"
+          className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-gray-900 font-medium" />
+      )}
+    </td>
+  ))}
+</tr>
 
                   {showSuccessors && (
                     <tr className="bg-white table-row-enter">
