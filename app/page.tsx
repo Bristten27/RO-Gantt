@@ -253,16 +253,15 @@ export default function Home() {
   const sortedTasksForGantt = [...orderedTasks].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 bg-zinc-50">
+    <div className="min-h-screen p-4 sm:p-6 bg-slate-100">
       <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#033012] flex items-center gap-3">
-          {/* Icône SVG (Feuille de tâches / Coche) */}
-          <svg className="w-8 h-8 text-[#033012]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <h1 className="text-2xl sm:text-3xl font-bold text-indigo-950 flex items-center gap-3">
+          <svg className="w-8 h-8 text-indigo-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2m-6 9l2 2 4-4"></path>
           </svg>
           Planificateur de taches
         </h1>
-        <div className="text-xs text-gray-400 italic">v1.0.0 - Ordonnancement de taches</div>
+        <div className="text-xs text-gray-500 italic">v1.0.0 - Ordonnancement de taches</div>
       </div>
 
       {errorMsg && (
@@ -272,8 +271,9 @@ export default function Home() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 order-2 lg:order-1">
+      {/* Grille modifiee : 4 colonnes, le Gantt/tableau prend 3 colonnes, le panneau lateral 1 colonne */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-3 order-2 lg:order-1">
           <div className="bg-white rounded-lg shadow-md p-4 mb-6">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -305,7 +305,7 @@ export default function Home() {
                       <td key={i} className="border border-gray-400 p-1">
                         <input type="text" value={value} onChange={(e) => handleChange(0, i, e.target.value)}
                           placeholder="Ex: A"
-                          className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-gray-900 font-medium" />
+                          className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition-all text-gray-900 font-medium" />
                       </td>
                     ))}
                   </tr>
@@ -315,22 +315,25 @@ export default function Home() {
                       <td key={i} className="border border-gray-400 p-1">
                         <input type="number" min={1} value={value} onChange={(e) => handleChange(1, i, e.target.value)}
                           placeholder="0"
-                          className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-gray-900 font-medium" />
+                          className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition-all text-gray-900 font-medium" />
                       </td>
                     ))}
                   </tr>
                   <tr className="bg-white">
                     <td className="border border-gray-400 px-3 py-2 font-medium text-gray-700 text-sm">Anteriorites</td>
                     {tableData[2].map((value, i) => (
-                      <td key={i} className="border border-gray-400 p-1">
+                      <td key={i} className="border border-gray-400 p-1 text-center text-sm font-medium text-gray-900">
                         {showSuccessors && successorPhase === 0 && currentTaskName ? (
                           value.split(",").map((v) => v.trim()).map((part, idx) => (
-                            <span key={idx}>{idx > 0 && ", "}<span className={part === currentTaskName ? "text-red-500 font-bold" : ""}>{part}</span></span>
+                            <span key={idx}>
+                              {idx > 0 && ", "}
+                              <span className={part === currentTaskName ? "text-red-500 font-bold" : ""}>{part}</span>
+                            </span>
                           ))
                         ) : (
                           <input type="text" value={value} onChange={(e) => handleChange(2, i, e.target.value)}
                             placeholder="- ou A, B"
-                            className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-gray-900 font-medium" />
+                            className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition-all text-gray-900 font-medium" />
                         )}
                       </td>
                     ))}
@@ -355,7 +358,7 @@ export default function Home() {
                     <tr className="bg-white table-row-enter">
                       <td className="border border-gray-400 px-3 py-2 font-medium text-gray-700 text-sm">Marge totale</td>
                       {taskNames.map((tName, i) => (
-                        <td key={i} className={`border border-gray-400 px-2 py-2 text-center text-sm font-semibold ${(criticalData[tName]?.margin ?? 0) === 0 ? "text-red-500" : "text-blue-600"} ${i < totalMarginStep ? "cell-fade-in" : ""}`}>
+                        <td key={i} className={`border border-gray-400 px-2 py-2 text-center text-sm font-semibold ${(criticalData[tName]?.margin ?? 0) === 0 ? "text-red-500" : "text-indigo-600"} ${i < totalMarginStep ? "cell-fade-in" : ""}`}>
                           {i < totalMarginStep ? criticalData[tName]?.margin ?? "" : ""}
                         </td>
                       ))}
@@ -368,7 +371,7 @@ export default function Home() {
                       {taskNames.map((tName, i) => {
                         const fm = criticalData[tName]?.freeMargin ?? 0;
                         return (
-                          <td key={i} className={`border border-gray-400 px-2 py-2 text-center text-sm font-semibold ${fm === 0 ? "text-red-500" : "text-blue-600"} ${i < freeMarginTableStep ? "cell-fade-in" : ""}`}>
+                          <td key={i} className={`border border-gray-400 px-2 py-2 text-center text-sm font-semibold ${fm === 0 ? "text-red-500" : "text-indigo-600"} ${i < freeMarginTableStep ? "cell-fade-in" : ""}`}>
                             {i < freeMarginTableStep ? fm : ""}
                           </td>
                         );
@@ -395,7 +398,7 @@ export default function Home() {
                 <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Diagramme Gantt</h3>
                 <button
                   onClick={exportGanttToPng}
-                  className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
+                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
                 >
                   Exporter en PNG
                 </button>
@@ -470,12 +473,12 @@ export default function Home() {
         </div>
 
         <div className="order-1 lg:order-2">
-          <div className="bg-white p-5 rounded-lg shadow-md sticky top-6">
+          <div className="bg-white p-4 rounded-lg shadow-md sticky top-6">
             {!started ? (
               <div className="mb-6">
                 <button onClick={() => { if (canStart) { resetAll(); setStarted(true); }}}
                   disabled={!canStart}
-                  className={`w-full py-3 rounded-lg text-white font-bold text-base transition-all ${canStart ? "bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg" : "bg-gray-300 cursor-not-allowed"}`}>
+                  className={`w-full py-3 rounded-lg text-white font-bold text-base transition-all ${canStart ? "bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg" : "bg-gray-300 cursor-not-allowed"}`}>
                   {validTasks.length < 2 ? "Ajoutez au moins 2 taches" : invalidDeps.length > 0 ? "Corrigez les dependances" : "Demarrer l analyse"}
                 </button>
               </div>
@@ -487,7 +490,7 @@ export default function Home() {
                     className={`flex-1 py-2.5 rounded-lg text-white font-medium text-sm transition-colors ${step === 0 && !showCritical && !showSuccessors && !showLateDates && !showTotalMargin && !showBlueBars && !showFreeMarginTable ? "bg-gray-300 cursor-not-allowed" : "bg-gray-500 hover:bg-gray-600"}`}>
                     Retour
                   </button>
-                  <button onClick={handleNext} className="flex-1 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm transition-colors">Suivant</button>
+                  <button onClick={handleNext} className="flex-1 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm transition-colors">Suivant</button>
                 </div>
                 <button onClick={() => { resetAll(); }} className="w-full mb-5 py-2 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50 text-sm transition-colors">Modifier les taches</button>
               </>
@@ -499,9 +502,9 @@ export default function Home() {
                 const isStepDone = (index === 0 && isAllTasksDisplayed) || (index === 1 && isCriticalComplete) || (index === 2 && isSuccessorsComplete) || (index === 3 && isLateDatesComplete) || (index === 4 && isTotalMarginComplete) || (index === 5 && isBlueBarsComplete) || (index === 6 && isFreeMarginTableComplete);
                 const isActive = started && ((index === 0 && !isStepDone && !isAllTasksDisplayed) || (index === 1 && isAllTasksDisplayed && !isCriticalComplete && !isStepDone) || (index === 2 && isCriticalComplete && !isSuccessorsComplete && !isStepDone) || (index === 3 && isSuccessorsComplete && !isLateDatesComplete && !isStepDone) || (index === 4 && isLateDatesComplete && !isTotalMarginComplete && !isStepDone) || (index === 5 && isTotalMarginComplete && !isBlueBarsComplete && !isStepDone) || (index === 6 && isBlueBarsComplete && !isFreeMarginTableComplete && !isStepDone));
                 return (
-                  <div key={index} className={`flex items-center gap-3 p-2.5 rounded-lg mb-1 transition-all ${isActive ? "bg-blue-50 border border-blue-200" : isStepDone ? "bg-green-50 border border-green-200" : started ? "bg-gray-50 border border-gray-200 opacity-60" : "bg-gray-50 border border-gray-200 opacity-50"}`}>
-                    <div className={`w-6 h-6 flex items-center justify-center rounded-full text-white text-xs font-bold shrink-0 ${isStepDone ? "bg-green-500" : isActive ? "bg-blue-500" : "bg-gray-300"}`}>{isStepDone ? "V" : index + 1}</div>
-                    <p className={`text-xs ${isStepDone ? "text-green-700 line-through" : isActive ? "text-blue-700 font-medium" : "text-gray-500"}`}>{label}</p>
+                  <div key={index} className={`flex items-center gap-2.5 p-2 rounded-lg mb-1 transition-all ${isActive ? "bg-indigo-50 border border-indigo-200" : isStepDone ? "bg-green-50 border border-green-200" : started ? "bg-gray-50 border border-gray-200 opacity-60" : "bg-gray-50 border border-gray-200 opacity-50"}`}>
+                    <div className={`w-5 h-5 flex items-center justify-center rounded-full text-white text-[10px] font-bold shrink-0 ${isStepDone ? "bg-green-500" : isActive ? "bg-indigo-600" : "bg-gray-300"}`}>{isStepDone ? "V" : index + 1}</div>
+                    <p className={`text-xs ${isStepDone ? "text-green-700 line-through" : isActive ? "text-indigo-900 font-medium" : "text-gray-500"}`}>{label}</p>
                   </div>
                 );
               })}
@@ -518,7 +521,7 @@ export default function Home() {
                 </div>
                 <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-indigo-500 to-indigo-700 rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.round(
                         [isAllTasksDisplayed, isCriticalComplete, isSuccessorsComplete,
