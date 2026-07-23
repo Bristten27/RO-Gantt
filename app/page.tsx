@@ -465,7 +465,7 @@ export default function Home() {
               <div className="flex gap-4 mt-3 text-xs text-gray-600 flex-wrap">
                 <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 bg-green-400 rounded" /> Date au plus tot</span>
                 <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 bg-red-400 rounded" /> Chemin critique</span>
-                <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 bg-orange-400 rounded" /> Flexibilite globale</span>
+                <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 bg-orange-400 rounded" /> Date au plus tard</span>
                 <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 bg-blue-400 rounded" /> Flexibilite immediate</span>
               </div>
             </div>
