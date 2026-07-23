@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { toPng } from "html-to-image";
 
 type CriticalTaskData = {
   es: number;
@@ -16,6 +17,21 @@ export default function Home() {
   const [cols, setCols] = useState(4);
   const increaseCols = () => setCols((prev) => prev + 1);
   const decreaseCols = () => setCols((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const ganttRef = useRef<HTMLDivElement>(null);
+
+  const exportGanttToPng = async () => {
+    if (!ganttRef.current) return;
+    try {
+      const dataUrl = await toPng(ganttRef.current, { cacheBust: true, backgroundColor: "#ffffff" });
+      const link = document.createElement("a");
+      link.download = "diagramme-gantt.png";
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Erreur lors de l'export PNG :", err);
+    }
+  };
 
   const [tableData, setTableData] = useState<string[][]>([
     ["", "", "", ""],
@@ -298,24 +314,21 @@ export default function Home() {
                     ))}
                   </tr>
                   <tr className="bg-white">
-                      <td className="border border-gray-400 px-3 py-2 font-medium text-gray-700 text-sm">Anteriorites</td>
-                      {tableData[2].map((value, i) => (
-                        <td key={i} className="border border-gray-400 px-2 py-2 text-center text-sm font-medium text-gray-900">
-                          {showSuccessors && successorPhase === 0 && currentTaskName ? (
-                            value.split(",").map((v) => v.trim()).map((part, idx) => (
-                              <span key={idx}>
-                                {idx > 0 && ", "}
-                                <span className={part === currentTaskName ? "text-red-500 font-bold" : ""}>{part}</span>
-                              </span>
-                            ))
-                          ) : (
-                            <input type="text" value={value} onChange={(e) => handleChange(2, i, e.target.value)}
-                              placeholder="- ou A, B"
-                              className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-gray-900 font-medium" />
-                          )}
-                        </td>
-  ))}
-</tr>
+                    <td className="border border-gray-400 px-3 py-2 font-medium text-gray-700 text-sm">Anteriorites</td>
+                    {tableData[2].map((value, i) => (
+                      <td key={i} className="border border-gray-400 p-1">
+                        {showSuccessors && successorPhase === 0 && currentTaskName ? (
+                          value.split(",").map((v) => v.trim()).map((part, idx) => (
+                            <span key={idx}>{idx > 0 && ", "}<span className={part === currentTaskName ? "text-red-500 font-bold" : ""}>{part}</span></span>
+                          ))
+                        ) : (
+                          <input type="text" value={value} onChange={(e) => handleChange(2, i, e.target.value)}
+                            placeholder="- ou A, B"
+                            className="w-full text-center outline-none px-1 py-1.5 rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-gray-900 font-medium" />
+                        )}
+                      </td>
+                    ))}
+                  </tr>
 
                   {showSuccessors && (
                     <tr className="bg-white table-row-enter">
@@ -371,8 +384,17 @@ export default function Home() {
           </div>
 
           {started && (
-            <div className="bg-white rounded-lg shadow-md p-4 overflow-x-auto">
-              <h3 className="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Diagramme Gantt</h3>
+            <div ref={ganttRef} className="bg-white rounded-lg shadow-md p-4 overflow-x-auto">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Diagramme Gantt</h3>
+                <button
+                  onClick={exportGanttToPng}
+                  className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
+                >
+                  Exporter en PNG
+                </button>
+              </div>
+
               <div style={{ minWidth: `${(maxTime + 2) * 22}px` }}>
                 <table className="border-collapse text-xs" style={{ tableLayout: "fixed", width: `${(maxTime + 2) * 22}px` }}>
                   <thead>
